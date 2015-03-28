@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="lib/utils.js"></script>
+<script type="text/javascript" src="dashlite/dashlite.js"></script>
+<script type="text/javascript" src="dashlite/column/Column.js"></script>
+<script type="text/javascript" src="dashlite/item/Item.js"></script>
+<script>
+function start() {
+
+   var dashboard1 = new DashLite({
+        parentElement: document.querySelector('#test1'),
+        items: [
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p><p>This is text</p><p>This is text</p>'},
+                { content: '<iframe src="https://www.youtube.com/embed/bMV-Wd5aIIM" frameborder="0" allowfullscreen></iframe>'},
+                ],
+
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'}
+                ],
+
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'}
+                ],
+
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                ]
+            ]
+        });
+   var dashboard2 = new DashLite({
+        parentElement: document.querySelector('#test2'),
+        items: [
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'}
+                ],
+
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'}
+                ],
+
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'}
+                ]
+            ]
+        });
+
+   var dashboard3 = new DashLite({
+        parentElement: document.querySelector('#test3'),
+        items: [
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'}
+                ],
+
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'}
+                ]
+            ]
+        });
+
+   var dashboard4 = new DashLite({
+        parentElement: document.querySelector('#test4'),
+        items: [
+                [
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                {title: 'Title!', content: '<p>This is text</p><p>This is text</p><p>This is text</p>'},
+                ]
+            ]
+        });
+
+};
+
+document.addEventListener('DOMContentLoaded', start, false);
+</script>
+<style>
+    body{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    padding:0;
+    margin: 0;
+    background-color: #CCC;
+    }
+</style>
+<link rel="stylesheet" href="css/style.css"/>
+<body>
+<h1>DashLite</h1>
+<h2>Four Columns</h2>
+<div id="test1"></div>
+<h2>Three Columns</h2>
+<div id="test2"></div>
+<h2>Two Columns</h2>
+<div id="test3"></div>
+<h2>One Columns</h2>
+<div id="test4"></div>
+</div>
+</body>
+</html>
