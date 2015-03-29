@@ -27,6 +27,7 @@ DashLite.prototype.createColumns = function(){
             item.element.addEventListener('drag:start', this.onDragStart.bind(this));
             item.element.addEventListener('drag:stop', this.onDragStop.bind(this));
             item.element.addEventListener('drag:move', this.onDragMove.bind(this));
+            item.element.addEventListener('drag:cancel', this.onDragCancel.bind(this));
         }.bind(this));
         
         
@@ -35,17 +36,60 @@ DashLite.prototype.createColumns = function(){
 
 DashLite.prototype.onDragMove = function(e){
     
-//    console.log(e.target);
+    var destinationElemement = e.destinationElement;
     
+    var originData = getOriginColumnAndItemFromElement.call(this, e.target);
+    var destinationData = getDestinationnColumnAndItemFromElement.call(this, e.destinationElement);
     
+    // complex conditionals here
+    var isTheNextSibling = (destinationData.item !== undefined && originData.item.element.nextSibling === destinationData.item.element);
+    var targetIsOriginPlaceholder = originData.column!== undefined && originData.column.originPlaceHolder && (originData.column.originPlaceHolder === destinationElemement || originData.column.originPlaceHolder.contains(destinationElemement));    
+    var outOfRange = (destinationData.column === undefined && destinationData.item === undefined && destinationData.destinationPlaceholder === undefined);    
+    var isItem = destinationData.column !== undefined && destinationData.item !== undefined && destinationData.destinationPlaceholder === undefined;
+    var isDestinationPlaceHolder = (destinationData.column !== undefined && destinationData.destinationPlaceholder === undefined  && originData.column.originPlaceHolder !== destinationData.destinationPlaceholder);
+    
+    if(targetIsOriginPlaceholder || isTheNextSibling || outOfRange){
+        this.removeDestinationPlaceholders();
+    }else if(isItem || isDestinationPlaceHolder){
+        this.removeDestinationPlaceholders();
+        destinationData.column.addDestinationPlaceHolder(destinationData.item, originData.item);
+        this.destinationColumn = destinationData.column;
+    }    
+}
+DashLite.prototype.removeDestinationPlaceholders = function(){
+    this.columns.forEach(function(column){
+        column.removeDestinationPlaceHolder();
+    })
 }
 DashLite.prototype.onDragStart = function(e){
     console.log(e);
-    var data = getColumnAndItemFromElement.call(this, e.target);
+    var data = getOriginColumnAndItemFromElement.call(this, e.target);
     data.column.addOriginPlaceHolder(data.item);
 }
 
-function getColumnAndItemFromElement(itemElement){
+function getDestinationnColumnAndItemFromElement(targetElement){
+    var column, item, destinationPlaceholder;
+    this.columns.forEach(function(col){
+        if(col.element.contains(targetElement)){
+            column = col;
+            column.items.forEach(function(it){
+                if(it.element.contains(targetElement) || it.element === targetElement){
+                    item = it;
+                }
+            }.bind(this));
+            
+            if(col.destinationPlaceHolder !== undefined && (col.destinationPlaceHolder === targetElement || col.destinationPlaceHolder.contains(targetElement) )){
+                destinationPlaceholder = col.destinationPlaceHolder;
+            }
+        }
+    }.bind(this));
+    return {
+        column: column,
+        item: item,
+        destinationPlaceholder: destinationPlaceholder
+    }
+}
+function getOriginColumnAndItemFromElement(itemElement){
     var column, item;
     this.columns.forEach(function(col){
         it = col.getItemByElement(itemElement);
@@ -59,12 +103,26 @@ function getColumnAndItemFromElement(itemElement){
         item: item
     }
 }
+
 DashLite.prototype.onDragStop = function(e){
-    // Add placeholder
-    var itemElement = e.target;
-    var data = getColumnAndItemFromElement.call(this, e.target);
-    console.log(data)
-    data.column.removeOriginPlaceHolder();
+    var originData = getOriginColumnAndItemFromElement.call(this, e.target);
+    
+    if(originData.column !== undefined && originData.item !== undefined && this.destinationColumn !== undefined){
+        var indexToRemove = originData.column.items.indexOf(originData.item);
+        originData.column.extractItem(indexToRemove);
+        
+        this.destinationColumn.addItemInPlaceholder(originData.item);
+        delete this.destinationColumn;
+    }
+    
+    originData.column.removeOriginPlaceHolder();
+    
+}
+
+DashLite.prototype.onDragCancel = function(e){
+    var originData = getOriginColumnAndItemFromElement.call(this, e.target);
+    originData.column.removeOriginPlaceHolder();
+    this.removeDestinationPlaceholders();
 }
 
 DashLite.prototype.setLayout = function(columns){

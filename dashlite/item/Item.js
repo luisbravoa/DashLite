@@ -4,48 +4,90 @@ function Item(options){
 
     // create the element
     this.element = utils.parse(
-    '<div class="DashLite-item">'+
-        '<div class="DashLite-item-header"></div>'+
-        '<div class="DashLite-item-content"></div>'+
+    '<div class="DashLite-item white">'+
+        '<div class="DashLite-item-holder">'+
+            '<div class="DashLite-item-header">'+
+                '<div class="DashLite-item-header-text"></div>'+
+                '<div class="DashLite-item-header-icons">'+
+                '<a href="#" class="DashLite-item-header-action-colapse">'+
+                    '<icon class="DashLite-item-header-icon arrowUp"></icon>'+
+                    '<icon class="DashLite-item-header-icon arrowDown"><icon>'+
+                '</a>'+
+            '</div>'+
+            '</div>'+
+        '<div class="DashLite-item-content"><div class="DashLite-item-content-holder"></div></div>'+
+        '</div>'+
     '</div>'
     );
 
     this.headerElement = this.element.querySelector('.DashLite-item-header');
-    this.contentHolderElement = this.element.querySelector('.DashLite-item-content')
+    this.contentElement = this.element.querySelector('.DashLite-item-content');
+    this.contentHolderElement = this.element.querySelector('.DashLite-item-content-holder');
     
     // add it to the content holder
     this.contentHolderElement.innerHTML = (this.options.content);
     if(this.options.title){
-        this.headerElement.innerHTML = (this.options.title);
+        this.headerElement.querySelector('.DashLite-item-header-text').innerHTML = (this.options.title);
     }
 
     this.color();
     
     this.listenForDragAndDropEvents();
+    
+    this.collapseButton = this.element.querySelector('.DashLite-item-header-action-colapse');
+    
+    this.collapsed = false;
+    
+    requestAnimationFrame(function(){
+        this.maxHeight = this.contentElement.offsetHeight + 'px';
+        this.contentElement.style.maxHeight = this.maxHeight;
+    }.bind(this));
+    
+    this.collapseButton.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        this.collapsed = !this.collapsed;
+        if(this.collapsed){
+            this.contentElement.style.maxHeight = '0px';
+            utils.addClass(this.element, 'collapsed');
+        }else{
+            this.contentElement.style.maxHeight = this.maxHeight;
 
+            utils.removeClass(this.element, 'collapsed');
+        }
+        
+    }.bind(this));
 }
 
 Item.prototype.color = function(){
     var colors = [
-        '#b50000',
-        '#ff0000',
-        '#ffff00',
-        '#00b500',
-        '#00ffff',
-        '#eece0d',
-        '#77c71a',
-        '#2cd6d2',
-        '#2d73d4',
-        '#bb37c3'
+        '#ec663c',
+        '#9c4274', 
+        '#12b0c5', 
+        '#ff9618', 
+        '#979996', 
+//        '#ff0000',
+//        '#ffff00',
+//        '#00b500',
+//        '#00ffff',
+//        '#eece0d',
+//        '#77c71a',
+//        '#2cd6d2',
+//        '#2d73d4',
+//        '#bb37c3'
     ];
 
     this.element.style.backgroundColor = colors[randomIntFromInterval(0, colors.length - 1)];
 
 }
 Item.prototype.onMove = function (e){
-        e.stopPropagation();
+    e.stopPropagation();
     e.preventDefault();
-    
+    if(e.which !== 1){
+        this.revertDrag();
+        this.element.dispatchEvent(new Event('drag:cancel'));
+        return;
+    }
     var mouseCoordinates = {
         x: e.clientX  + document.body.scrollLeft - document.documentElement.offsetLeft,
         y: e.clientY + document.body.scrollTop  - document.documentElement.offsetTop
@@ -57,15 +99,23 @@ Item.prototype.onMove = function (e){
     
     // get the element 
     this.element.style.display = 'none';
-    var destinationElement = document.elementFromPoint(e.clientX, e.clientY);
+    this.destinationElement = document.elementFromPoint(e.clientX, e.clientY);
     this.element.style.display = '';
     
-    this.element.dispatchEvent(new Event('drag:move'));
+    var moveEvent = new Event('drag:move');
+    moveEvent.destinationElement = this.destinationElement;
+    this.element.dispatchEvent(moveEvent);
 }
-
+Item.prototype.revertDrag = function(){
+        utils.removeClass(this.element, 'drag');
+    this.element.style.left = '';
+    this.element.style.top = '';
+    this.element.style.width = '';
+    
+    document.body.removeEventListener("mousemove", this.onMoveHandler, true);
+};
 
 Item.prototype.onDrag = function (e){
-//    console.log(e);
     e.stopPropagation();
     e.preventDefault();
     var mouseCoordinates = {
@@ -88,22 +138,22 @@ Item.prototype.onDrag = function (e){
 };
 
 
+
 Item.prototype.onDrop = function (e){
     e.stopPropagation();
     e.preventDefault();
-    utils.removeClass(this.element, 'drag');
-    this.element.style.left = '';
-    this.element.style.top = '';
-    this.element.style.width = '';
+    this.revertDrag();
     
-    document.body.removeEventListener("mousemove", this.onMoveHandler, true);
+    var stopEvent = new Event('drag:stop');
+    stopEvent.destinationElement = this.destinationElement;
+    this.element.dispatchEvent(stopEvent);
     
-    this.element.dispatchEvent(new Event('drag:stop'));
+    this.destinationElement = undefined;
     
 };
 
 Item.prototype.listenForDragAndDropEvents = function(){
-    this.mouseDownEvent = this.headerElement.addEventListener('mousedown', this.onDrag.bind(this), true);
+    this.mouseDownEvent = this.headerElement.querySelector('.DashLite-item-header-text').addEventListener('mousedown', this.onDrag.bind(this), true);
     this.mouseUpEvent = this.element.addEventListener('mouseup', this.onDrop.bind(this), true);
 };
 
