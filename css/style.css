@@ -39,13 +39,27 @@
     margin-bottom: 10px;
     vertical-align: top;
 }
+.DashLite-item.drag{
+    position: absolute;
+}
 
 .DashLite-item-header{
     background-color:rgba(0, 0, 0, 0.1);
-    padding:5px;
+    padding: 5px;
+    cursor: move;
+    
+       -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .DashLite-item-content{
     padding: 10px;
 }
 
+.DashLite-item-placeholder{
+    background-color: grey;
+}
