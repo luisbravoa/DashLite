@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <!--<link rel="stylesheet" href="../src/main.css">-->
+    <!--<link rel="stylesheet" href="../src/column/column.css">-->
+    <!--<link rel="stylesheet" href="../src/item/item.css">-->
+    <link rel="stylesheet" href="../dist/DashLite.min.css">
+    <script src="../src/utils.js"></script>
+    <script src="../src/Base.js"></script>
+    <script src="../src/Main.js"></script>
+    <script src="../src/column/Column.js"></script>
+    <script src="../src/item/Item.js"></script>
+    <script>
+        var dashboard;
+        function start() {
+
+            var text1 = '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.</p>';
+            var text2 = '<p>Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>';
+            var text3 = '<p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.</p>';
+            dashboard = new DashLite({
+                parentElement: document.querySelector('#test1'),
+                items: [
+                    [
+                        {
+                            title: 'Youtube Video',
+                            content: 'gfhgfh'
+                        },
+                        {
+                            title: 'Title!',
+                            content: text1 + text2 + text3
+                        },
+
+                    ],
+
+                    [
+                        {
+                            title: 'Title!',
+                            content: text1 + text2
+                        },
+                        {
+                            title: 'Youtube Video',
+                            content: 'ghgfhgf'
+                        },
+                        {
+                            title: 'Title!',
+                            content: text3
+                        },
+                        {
+                            title: 'Title!',
+                            content: text3 + text1
+                        }
+                    ],
+
+                    [
+                        {
+                            title: 'Title!',
+                            content: text1
+                        },
+                        {
+                            title: 'Title!',
+                            content: text1
+                        }
+                    ],
+
+                    [
+                        {
+                            title: 'Title!',
+                            content: text1
+                        }
+                    ]
+                ]
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', start, false);
+
+    </script>
+</head>
+<body>
+<div id="test1"></div>
+</body>
+</html>
