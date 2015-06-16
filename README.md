@@ -6,9 +6,9 @@ DashLite is a super lightweight and flexible library that allow you to create fu
 
 # Why DashLite? 
 - No dependencies.
-- Touch optimized.
-- Resposive Behaviour
-- Persistable state.
+- Touch optimized. (TODO)
+- Resposive Behaviour. (TODO)
+- Persistable state. (TODO)
 
 # Basic Usage 
 The followin code will result in a two column dashbor with 2 items in each column.
