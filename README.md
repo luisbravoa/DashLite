@@ -2,7 +2,7 @@
 
 DashLite is a super lightweight and flexible library that allow you to create fully customizable dashboard layouts. Items can be draged and dropped  and can be collapsed as well.
 
-<a href="http://dashlite.luisbravoa.com" target="_blank">Visit the DashLite page to see a live demo!</a>
+<a href="http://www.luisbravoa.com/dashlite" target="_blank">Visit the DashLite page to see a live demo!</a>
 
 # Why DashLite? 
 - No dependencies.
